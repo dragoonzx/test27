@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://api-maps.yandex.ru/2.1/?apikey=8149527a-3b47-48dc-81ba-0825ade226bf&lang=ru_RU">
+  </script>
+  <title>Document</title>
+</head>
+<body>
+  <iframe title="map" style="width: 100vw;height:100vh;" scrolling="no" frameborder="0"></iframe>
+
+  <script>
+    initIframe()
+
+    function initIframe() {
+      this.IFrame = document.querySelector("iframe");
+
+      if (!this.IFrame) {
+        return
+      }
+
+      this.IFrameDocument = this.IFrame.contentDocument;
+      this.IFrameWindow = this.IFrame.contentWindow;
+      const script = document.createElement("script");
+      script.setAttribute(
+        "src",
+        "https://api-maps.yandex.ru/2.1/?apikey=8149527a-3b47-48dc-81ba-0825ade226bf&lang=ru_RU"
+      );
+      script.addEventListener('lo', () => {
+        this.initMap()
+      })
+
+      this.mapElement = document.createElement("div");
+      this.mapElement.style.height = "100vh";
+      this.mapElement.style.width = "100vw";
+      if (this.IFrameDocument) {
+        this.IFrameDocument.body.appendChild(script);
+        this.IFrameDocument.body.appendChild(this.mapElement);
+        this.IFrameDocument.body.style.margin = "0";
+      }
+    }
+
+    function initMap() {
+      const { ymaps } = this.IFrameWindow;
+      ymaps.ready(() => {
+        const myMap = new ymaps.Map(this.mapElement, {
+          center: [55.76, 37.64],
+          zoom: 10,
+          controls: ['zoomControl']
+        });
+
+        const kek = new ymaps.Placemark([55.76, 37.64], {}, {
+          iconLayout: 'default#image',
+          iconImageHref: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAvCAYAAABpG3MiAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAVjSURBVHgBzVhrTFtlGH56hcLKOiYbVMAz3DBZhgPFoGGLVYOYmUxxLkZnnO7HiMkimMxEjUQWdtHEhS3IlpnoQraYbbibYaBxEfAS/QUSfrE5WiejQLiUjsvaQl+/73BOLV0vp9COPeRJ+N7zfT1Pv/c57/f2APcRVIgOJsadjPkSBSkm4y9GG2MbY7s0jjksjK2MFCU7JfExgbBAEYG0KhEVLk0VjNXwS8PyFDU2bkjCS1uWY3PxMphM2nkLxsdnYPvHg+9bHGj//TZu/usJ/MwjjO8jSjGfSkIkERrs2Z2GPeVpSGUCVAqcNjNLOH1mFPu/GGCi3P6XuI+eYXQoETNPyKanluGruiysFRKxELg9hANM0KHDAxEFacIJ+aByNb7+8iGkpeqwUGg0Klg2GbEqTYeWn5xyOF3i5VBiBMZLPiEVq1HzSQa0mmif/rvB01pYkISHcxJxqcm3Gbw0jDP+GUwMfwxFsz5nMeLEkeyYCPFH3noDEhJU+PmXCTn0JOMJxjv+Yt6WiIwMHc6cXIO0lVrEA0VPJONquxO3+sUnjRvRhbkiCbU0x1cD3notFWvXJCBe4Ltd/aHZP8RLiJgRngcBc0UJSQY12ppzkSPoEU94vUDpK9fR2TUth3jtOcLFVDLWisrYKO0BHRbrFLVajcysLKSuWIG+vj4MDw/fNWdyyouJyVl52Ia5Rx0XEaKMp6Sk0I4dO0iv14vjdevWUWlpadjSz9fU19eTw+Gg6elpYmKooqKCmMBw68ZkVZ2hJpnNZhoaGqJTp05RXl4edXd30/nz50mj0QSdr1KpqKamhkZHR2nv3r1ksVjo2LFjNDExQSUlJZHOLwGSqpCTiouLyW63i9+0ubmZMjIyQs41GAzU09NDdXV1ojA51tHRQQ0NDb5YCObzp8mEMHC73cxLKlYfEqDVajE1NRVyLvcK2zWwnfDFPB6PSJ0uYhUXdYRUm5mZSf39/dTY2EiFhYXU29tL586dC5l/Hj9+/Li4pqysjLKzs6mqqoqYGNq2bVukNFm4GGuoCUajkcrLyyk5OVkc5+bm0vbt2+dtNxdgNGp94/T0dGpqaiKXy0VsV0UePHgwkoHFNHExrVDWIAXlludN1HBCYKb+/2aJiYlUVFREW7dupZycnEhekSmWFN7w8CrIjgAdHmcHmlLo9WrUHnoQK1dq8FG1HVabS/Fa+6AHXd0+//GWooCLsUi7gxSjBv3XNkCnVV72VH6dFhEpXvfmbhsaL/pO8KOMlWpJlRh13p7Ft40O8QZKGShMCW9Y3f5COMTWRS0JOSpHqw7cwsjYDOIFYn/7PrP7h6wIOLW5b8SSPDg4g6r9dkSx41Hh8hUnzl4Y8w/tk/+R+xne3HD3vcAHHV1TMLO+5rGNys2sBNduuPD6Lis7IL1yiJ+LHweK4eDt39OMa/jgyo9OmM06FOQlKfo1oERIadl12Ad8P194et6AX1Me2JDzn6Q7GQ2ioB+ccLkJls3LoF6gIp7ulqtOvPjq3xgemfW/tAt+/S9HsDtYID3qMrKz9Kg/nIUSSwo7f6AIXibCaruDfZ8P4Mx3Y4GXuU+qA4Ohvi5vtioDg+sfScR7765Cfp4BBY8G95Ptpgutv07g9NkR/PbHZLApPD05wS6E2/sOxoIw15GVqZuXvjHHDKtV3nBLuJBnMfemIioIjKNYxLkVhDuxCLwcQyG1iAFqYyCkFzEC78A6FiGEp1pADCFg4f6pRBxQuQAh3yCOiMY/3CcmxBEm6SZKxAi4B+CNcyT/VOMeIpx/TmIJcAHBfSJgCRDMP/lYQlgYvYiRTzRYHGyYe0nIX3W9g/sEMakn/wF97Oyd23eAyQAAAABJRU5ErkJggg==',
+          iconImageSize: [30, 42],
+          iconImageOffset: [-15, -42]
+        });
+
+        myMap.geoObjects.add(kek).add(new ymaps.Placemark([55.45, 37.41], {
+          iconContent: 'Животный мир Австралии',
+        }, {
+          preset: 'islands#blackStretchyIcon',
+          iconColor: '#000'
+        }));
+      })
+    }
+    </script>
+</body>
+</html>
